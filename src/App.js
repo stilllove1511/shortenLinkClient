@@ -1,25 +1,27 @@
-import logo from './logo.svg';
-import './App.css';
+import { BrowserRouter } from "react-router-dom";
+import "./App.css";
+import Navbar from "./components/Navbar/Navbar";
+import Home from "./screens/Home";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import { useSelector, useDispatch } from "react-redux";
+import { useEffect } from "react";
+import { sendJwt } from "./redux/features/account/accountSlice";
 
 function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+    const dispatch = useDispatch();
+    useEffect(() => {
+        dispatch(sendJwt());
+    }, []);
+    return (
+        <BrowserRouter>
+            <Navbar />
+            <div className="container mt-2">
+                <Home />
+            </div>
+            <ToastContainer position="bottom-right" />
+        </BrowserRouter>
+    );
 }
 
 export default App;
