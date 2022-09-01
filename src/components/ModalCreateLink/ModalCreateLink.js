@@ -18,6 +18,9 @@ export default (props) => {
         })
         if (response.EC === 0) {
             props.onHide(true)
+            setTitle("")
+            setOriginLink("")
+            setShortenLink("")
         } else {
             toast.error("error")
         }

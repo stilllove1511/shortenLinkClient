@@ -6,9 +6,9 @@ import { getLink } from "../../redux/features/link/linkSlice"
 import services from "../../services"
 
 export default (props) => {
-    const [title, setTitle] = useState()
-    const [originLink, setOriginLink] = useState()
-    const [shortenLink, setShortenLink] = useState()
+    const [title, setTitle] = useState("")
+    const [originLink, setOriginLink] = useState("")
+    const [shortenLink, setShortenLink] = useState("")
 
     const sendRequest = async () => {
         let response = await services.updateLinkReq({

@@ -5,11 +5,13 @@ import ModalCreateLink from "../components/ModalCreateLink/ModalCreateLink"
 import ModalUpdateLink from "../components/ModalUpdateLink/ModalUpdateLink"
 import { baseURL } from "../constants"
 import services from "../services"
+import ModalSignUp from "../components/ModalSignUp/ModalSignUp"
 
 export default (props) => {
     const account = useSelector((state) => state.account.account)
     const [linksList, setLinksList] = useState([])
     const [isShowUpdateLinkModal, setIsShowUpdateLinkModal] = useState(false)
+    const [isShowSignUpModal, setIsShowSignUpModal] = useState(false)
     const [isShowCreateLinkModal, setIsShowCreateLinkModal] = useState(false)
     const [linkId, setLinkId] = useState(0)
     const [linkData, setLinkData] = useState({
@@ -38,12 +40,34 @@ export default (props) => {
         }
     }
 
+    const handleShowSignUpModal = () => {
+        setIsShowSignUpModal(true)
+    }
+
     useEffect(() => {
         if (account.isLogin) fetchLink()
     }, [account.isLogin])
 
     return !account.isLogin ? (
-        <>Welcome!!</>
+        <>
+            Welcome!!
+            <br />
+            Haven't already have an account?{" "}
+            <u
+                style={{ cursor: "pointer" }}
+                onClick={() => {
+                    handleShowSignUpModal()
+                }}
+            >
+                Sign up
+            </u>{" "}
+            <ModalSignUp
+                show={isShowSignUpModal}
+                onHide={() => {
+                    setIsShowSignUpModal(false)
+                }}
+            />
+        </>
     ) : (
         <>
             <button
