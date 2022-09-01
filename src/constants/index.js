@@ -1,2 +1,1 @@
-// export const baseURL = 'https://storebe1.herokuapp.com/';
-export const baseURL = 'http://localhost:8080/';
+export const baseURL = "https://valsl.herokuapp.com/"
