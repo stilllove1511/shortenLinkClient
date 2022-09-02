@@ -5,6 +5,7 @@ import { useSelector, useDispatch } from "react-redux"
 import { logout } from "../../redux/features/account/accountSlice"
 import services from "../../services"
 import { Link } from "react-router-dom"
+import ModalPassword from "../ModalPassword/ModalPassword"
 
 export default (props) => {
     const dispatch = useDispatch()
@@ -12,10 +13,6 @@ export default (props) => {
     const [isShowPasswordModal, setIsShowPasswordModal] = useState(false)
     const account = useSelector((state) => state.account.account)
 
-    const handleCloseModal = () => {
-        setIsShowLoginModal(false)
-        setIsShowPasswordModal(false)
-    }
     const handleShowLoginModal = () => setIsShowLoginModal(true)
     const handleShowPasswordModal = () => setIsShowPasswordModal(true)
     return (
@@ -124,7 +121,19 @@ export default (props) => {
                     </div>
                 </div>
             </nav>
-            <ModalLogin show={isShowLoginModal} onHide={handleCloseModal} />
+            <ModalLogin
+                show={isShowLoginModal}
+                onHide={() => {
+                    setIsShowLoginModal(false)
+                }}
+            />
+            <ModalPassword
+                show={isShowPasswordModal}
+                onHide={(callback = () => {}) => {
+                    setIsShowPasswordModal(false)
+                    callback()
+                }}
+            />
         </>
     )
 }

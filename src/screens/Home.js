@@ -44,7 +44,9 @@ export default (props) => {
         if (account.isLogin) fetchLink()
     }, [account.isLogin])
 
-    return !account.isLogin ? (
+    return account.isLoading ? (
+        <>Loading...</>
+    ) : !account.isLogin ? (
         <>
             Welcome!!
             <br />

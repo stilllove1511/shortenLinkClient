@@ -4,32 +4,23 @@ import { toast } from "react-toastify"
 import services from "../../services"
 
 export default (props) => {
-    const [username, setUsername] = useState("")
     const [password, setPassword] = useState("")
     const [confirmPassword, setConfirmPassword] = useState("")
     const [errorText, setErrorText] = useState("")
+    const [successText, setSuccessText] = useState("")
 
-    const [usernameError, setUsernameError] = useState(false)
     const [passwordError, setPasswordError] = useState(false)
     const [confirmPasswordError, setConfirmPasswordError] = useState(false)
 
     const sendRequest = async () => {
-        if (!username) {
-            setUsernameError(true)
-            setPasswordError(false)
-            setConfirmPasswordError(false)
-            setErrorText("Please enter your username")
-            return
-        }
+        setSuccessText("")
         if (!password) {
-            setUsernameError(false)
             setPasswordError(true)
             setConfirmPasswordError(false)
             setErrorText("Please enter your password")
             return
         }
         if (!confirmPassword) {
-            setUsernameError(false)
             setPasswordError(false)
 
             setConfirmPasswordError(true)
@@ -41,15 +32,15 @@ export default (props) => {
             setErrorText("your password is not confrim")
             return
         }
-        let res = await services.sendSignUpReq({ username, password })
+        let res = await services.changePasswordReq({ password })
         if (res.EC === 0) {
-            toast.success("sign up success")
-            props.onHide()
-            setUsername("")
+            setSuccessText(res.EM)
+            setPasswordError(false)
+            setConfirmPasswordError(false)
             setPassword("")
+            setConfirmPassword("")
             setErrorText("")
         } else {
-            setUsernameError(false)
             setPasswordError(false)
             setConfirmPasswordError(false)
             setErrorText(res.EM)
@@ -60,26 +51,10 @@ export default (props) => {
         <>
             <Modal show={props.show} onHide={props.onHide}>
                 <Modal.Header closeButton>
-                    <Modal.Title>Sign up</Modal.Title>
+                    <Modal.Title>Update Password</Modal.Title>
                 </Modal.Header>
 
                 <Modal.Body>
-                    <div className="mb-3">
-                        <label className="form-label">Username</label>
-                        <input
-                            onChange={(event) => {
-                                setUsername(event.target.value)
-                            }}
-                            type="text"
-                            className={
-                                usernameError
-                                    ? "form-control  is-invalid"
-                                    : "form-control"
-                            }
-                            value={username}
-                        />
-                    </div>
-
                     <div className="mb-3">
                         <label className="form-label">Password</label>
                         <input
@@ -112,6 +87,9 @@ export default (props) => {
                     </div>
                     <div className="mb-3 text-danger error-text">
                         {errorText ? errorText : ""}{" "}
+                    </div>
+                    <div className="mb-3 text-success error-text">
+                        {successText ? successText : ""}{" "}
                     </div>
                 </Modal.Body>
 

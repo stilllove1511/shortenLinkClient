@@ -7,6 +7,12 @@ import { toast } from "react-toastify"
 export default (props) => {
     const [username, setUsername] = useState("")
     const [password, setPassword] = useState("")
+    const [confirmPassword, setConfirmPassword] = useState("")
+    const [errorText, setErrorText] = useState("")
+
+    const [usernameError, setUsernameError] = useState(false)
+    const [passwordError, setPasswordError] = useState(false)
+    const [confirmPasswordError, setConfirmPasswordError] = useState(false)
 
     const dispatch = useDispatch()
     const account = useSelector((state) => state.account.account)
@@ -16,14 +22,24 @@ export default (props) => {
     const resEM = useSelector((state) => state.account.EM)
 
     const sendLoginRequest = async () => {
+        dispatch(clearEM())
         if (!username) {
-            toast.error("Please enter your username")
-            return
+            setUsernameError(true)
+            setErrorText("Cannot be empty")
+        } else {
+            setUsernameError(false)
         }
         if (!password) {
-            toast.error("Please enter your password")
+            setPasswordError(true)
+            setErrorText("Cannot be empty")
             return
+        } else {
+            setPasswordError(false)
         }
+        if (username && password);
+        else return
+
+        setErrorText("")
         dispatch(login({ username, password }))
     }
 
@@ -50,7 +66,11 @@ export default (props) => {
                                 setUsername(event.target.value)
                             }}
                             type="text"
-                            className="form-control"
+                            className={
+                                usernameError
+                                    ? "form-control is-invalid"
+                                    : "form-control"
+                            }
                             id="username"
                             value={username}
                         />
@@ -62,13 +82,20 @@ export default (props) => {
                         </label>
                         <input
                             type="password"
-                            className="form-control"
+                            className={
+                                passwordError
+                                    ? "form-control  is-invalid"
+                                    : "form-control"
+                            }
                             id="password"
                             onChange={(event) =>
                                 setPassword(event.target.value)
                             }
                             value={password}
                         />
+                    </div>
+                    <div className="mb-3 text-danger error-text">
+                        {errorText ? errorText : ""}{" "}
                     </div>
                     <div className="mb-3 text-danger">{resEM ? resEM : ""}</div>
                 </Modal.Body>

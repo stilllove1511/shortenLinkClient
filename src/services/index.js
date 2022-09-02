@@ -14,9 +14,9 @@ const sendSignUpReq = (data) => {
     })
 }
 
-const changePasswordReq = (userData) => {
-    return axios.put("/account/update-password", {
-        ...userData,
+const changePasswordReq = (data) => {
+    return axios.put("/account/update-pass", {
+        ...data,
     })
 }
 
