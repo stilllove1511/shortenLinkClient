@@ -1,5 +1,5 @@
-import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import services from "../../../services";
+import { createSlice, createAsyncThunk } from "@reduxjs/toolkit"
+import services from "../../../services"
 
 const initialState = {
     linksList: [],
@@ -8,23 +8,23 @@ const initialState = {
     isLoading: false,
     isError: false,
     isSuccess: false,
-};
+}
 
 export const getLink = createAsyncThunk("link/getLink", async () => {
-    const response = await services.getLinkReq();
-    return response;
-});
+    const response = await services.getLinkReq()
+    return response
+})
 
 export const linkSlice = createSlice({
     name: "link",
     initialState,
     reducers: {
         clearState: (state) => {
-            state.isError = false;
-            state.isSuccess = false;
-            state.isLoading = false;
+            state.isError = false
+            state.isSuccess = false
+            state.isLoading = false
 
-            return state;
+            return state
         },
     },
     extraReducers: (builder) => {
@@ -32,32 +32,32 @@ export const linkSlice = createSlice({
         builder
             .addCase(getLink.pending, (state, action) => {
                 // Add user to the state array
-                state.isLoading = true;
-                state.isError = false;
-                state.isSuccess = false;
+                state.isLoading = true
+                state.isError = false
+                state.isSuccess = false
             })
             .addCase(getLink.fulfilled, (state, action) => {
-                state.isLoading = false;
+                state.isLoading = false
                 if (action.payload && action.payload.EC === 0) {
-                    state.isError = false;
-                    state.linksList = [...action.payload.DT];
-                    state.isSuccess = true;
-                    state.isError = false;
+                    state.isError = false
+                    state.linksList = [...action.payload.DT]
+                    state.isSuccess = true
+                    state.isError = false
                 } else {
-                    state.isSuccess = false;
-                    state.isError = true;
+                    state.isSuccess = false
+                    state.isError = true
                 }
             })
             .addCase(getLink.rejected, (state, action) => {
                 // Add user to the state array
-                state.isSuccess = false;
-                state.isLoading = false;
-                state.isError = true;
-            });
+                state.isSuccess = false
+                state.isLoading = false
+                state.isError = true
+            })
     },
-});
+})
 
 // Action creators are generated for each case reducer function
-export const { clearState } = linkSlice.actions;
+export const { clearState } = linkSlice.actions
 
-export default linkSlice.reducer;
+export default linkSlice.reducer

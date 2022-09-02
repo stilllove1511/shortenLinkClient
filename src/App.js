@@ -12,6 +12,7 @@ import AllLink from "./screens/AllLink"
 function App() {
     const dispatch = useDispatch()
     useEffect(() => {
+        // window.history.pushState("", "", "/")
         dispatch(sendJwt())
     }, [])
     return (

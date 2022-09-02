@@ -1,6 +1,6 @@
 import { Modal, Button } from "react-bootstrap"
 import { useState, useEffect } from "react"
-import { login, clearState } from "../../redux/features/account/accountSlice"
+import { login, clearEM } from "../../redux/features/account/accountSlice"
 import { useSelector, useDispatch } from "react-redux"
 import { toast } from "react-toastify"
 
@@ -13,6 +13,7 @@ export default (props) => {
     const isLoading = useSelector((state) => state.account.isLoading)
     const isError = useSelector((state) => state.account.isError)
     const isSuccess = useSelector((state) => state.account.isSuccess)
+    const resEM = useSelector((state) => state.account.EM)
 
     const sendLoginRequest = async () => {
         if (!username) {
@@ -29,8 +30,9 @@ export default (props) => {
     useEffect(() => {
         if (isSuccess) {
             props.onHide()
+            dispatch(clearEM())
         }
-    }, [isError, isSuccess])
+    }, [isSuccess])
     return (
         <>
             <Modal show={props.show} onHide={props.onHide}>
@@ -68,6 +70,7 @@ export default (props) => {
                             value={password}
                         />
                     </div>
+                    <div className="mb-3 text-danger">{resEM ? resEM : ""}</div>
                 </Modal.Body>
 
                 <Modal.Footer>

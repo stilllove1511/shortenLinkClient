@@ -30,10 +30,8 @@ export const accountSlice = createSlice({
     name: "account",
     initialState,
     reducers: {
-        clearState: (state) => {
-            state.isError = false
-            state.isSuccess = false
-            state.isLoading = false
+        clearEM: (state) => {
+            state.EM = ""
 
             return state
         },
@@ -66,6 +64,7 @@ export const accountSlice = createSlice({
                 } else {
                     state.isSuccess = false
                     state.isError = true
+                    state.EM = action.payload.EM
                 }
             })
             .addCase(login.rejected, (state, action) => {
@@ -73,6 +72,7 @@ export const accountSlice = createSlice({
                 state.isSuccess = false
                 state.isLoading = false
                 state.isError = true
+                state.EM = action.payload.EM
             })
 
             .addCase(sendJwt.pending, (state, action) => {
@@ -106,6 +106,6 @@ export const accountSlice = createSlice({
 })
 
 // Action creators are generated for each case reducer function
-export const { clearState, logout } = accountSlice.actions
+export const { clearEM, logout } = accountSlice.actions
 
 export default accountSlice.reducer

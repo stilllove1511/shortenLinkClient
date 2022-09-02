@@ -6,6 +6,7 @@ import ModalUpdateLink from "../components/ModalUpdateLink/ModalUpdateLink"
 import { baseURL } from "../constants"
 import services from "../services"
 import ModalSignUp from "../components/ModalSignUp/ModalSignUp"
+import ModalDeleteLink from "../components/ModalDeleteLink/ModalDeleteLink"
 
 export default (props) => {
     const account = useSelector((state) => state.account.account)
@@ -13,6 +14,7 @@ export default (props) => {
     const [isShowUpdateLinkModal, setIsShowUpdateLinkModal] = useState(false)
     const [isShowSignUpModal, setIsShowSignUpModal] = useState(false)
     const [isShowCreateLinkModal, setIsShowCreateLinkModal] = useState(false)
+    const [isShowDeleteLinkModal, setIsShowDeleteLinkModal] = useState(false)
     const [linkId, setLinkId] = useState(0)
     const [linkData, setLinkData] = useState({
         id: 0,
@@ -21,15 +23,9 @@ export default (props) => {
         shortenLink: "",
     })
 
-    const handleDeleteLink = async (id) => {
-        let res = await services.deleteLinkReq(id)
-        if (res.EC !== 0) toast.error("error")
-        let resGetLink = await services.getLinkReq()
-        if (resGetLink) {
-            setLinksList(resGetLink.DT)
-        } else {
-            toast("some thonf wrong!!")
-        }
+    const handleDeleteLink = async (link) => {
+        setLinkData(link)
+        setIsShowDeleteLinkModal(true)
     }
     const fetchLink = async () => {
         let res = await services.getLinkReq()
@@ -102,7 +98,7 @@ export default (props) => {
                             <button
                                 className="btn btn-danger"
                                 onClick={() => {
-                                    handleDeleteLink(link.id)
+                                    handleDeleteLink(link)
                                 }}
                             >
                                 Delete
@@ -124,6 +120,14 @@ export default (props) => {
                 show={isShowCreateLinkModal}
                 onHide={async (isRefresh = false) => {
                     setIsShowCreateLinkModal(false)
+                    if (isRefresh) await fetchLink()
+                }}
+            />
+            <ModalDeleteLink
+                link={linkData}
+                show={isShowDeleteLinkModal}
+                onHide={async (isRefresh = false) => {
+                    setIsShowDeleteLinkModal(false)
                     if (isRefresh) await fetchLink()
                 }}
             />
