@@ -10,6 +10,7 @@ import ModalDeleteLink from "../components/ModalDeleteLink/ModalDeleteLink"
 
 export default (props) => {
     const account = useSelector((state) => state.account.account)
+    const jwt = useSelector((state) => state.account.jwt)
     const [linksList, setLinksList] = useState([])
     const [isShowUpdateLinkModal, setIsShowUpdateLinkModal] = useState(false)
     const [isShowSignUpModal, setIsShowSignUpModal] = useState(false)
@@ -44,7 +45,7 @@ export default (props) => {
         if (account.isLogin) fetchLink()
     }, [account.isLogin])
 
-    return account.isLoading ? (
+    return jwt.isSending ? (
         <>Loading...</>
     ) : !account.isLogin ? (
         <>

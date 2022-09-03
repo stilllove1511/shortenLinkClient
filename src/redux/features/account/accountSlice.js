@@ -6,6 +6,9 @@ const initialState = {
         info: "",
         isLogin: false,
     },
+    jwt: {
+        isSending: false,
+    },
     EM: "",
     EC: 1,
     isLoading: false,
@@ -90,8 +93,10 @@ export const accountSlice = createSlice({
 
             .addCase(sendJwt.pending, (state, action) => {
                 // Add user to the state array
+                state.jwt.isSending = true
             })
             .addCase(sendJwt.fulfilled, (state, action) => {
+                state.jwt.isSending = false
                 if (action.payload && action.payload.EC === 0) {
                     state.account = {
                         info: { ...action.payload.DT },
@@ -101,6 +106,7 @@ export const accountSlice = createSlice({
             })
             .addCase(sendJwt.rejected, (state, action) => {
                 // Add user to the state array
+                state.jwt.isSending = false
             })
     },
 })
