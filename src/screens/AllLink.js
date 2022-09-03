@@ -27,7 +27,7 @@ export default (props) => {
                         key={"link" + index}
                         className="card"
                         onClick={() => {
-                            window.location.replace(link.originLink)
+                            // window.location.replace(link.originLink)
                         }}
                     >
                         <div className="card-body">

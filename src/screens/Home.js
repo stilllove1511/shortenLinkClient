@@ -3,7 +3,7 @@ import { useSelector } from "react-redux"
 import { toast } from "react-toastify"
 import ModalCreateLink from "../components/ModalCreateLink/ModalCreateLink"
 import ModalUpdateLink from "../components/ModalUpdateLink/ModalUpdateLink"
-import { baseURL } from "../constants"
+import { redirectorURL } from "../constants"
 import services from "../services"
 import ModalSignUp from "../components/ModalSignUp/ModalSignUp"
 import ModalDeleteLink from "../components/ModalDeleteLink/ModalDeleteLink"
@@ -83,7 +83,7 @@ export default (props) => {
                             <h5 className="card-title">{link.title}</h5>
                             <p className="card-text">
                                 <b>Shorten link: </b>
-                                {baseURL + link.shortenLink}
+                                {redirectorURL + link.shortenLink}
                             </p>
                             <button
                                 className="btn btn-warning"
