@@ -54,7 +54,7 @@ export default (props) => {
                                 </u>
                                 <br />
                                 <b>Shorten link: </b>
-                                {baseURL + link.shortenLink}
+                                {redirectorURL + link.shortenLink}
                             </span>
                         </div>
                     </div>
