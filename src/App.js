@@ -21,6 +21,7 @@ function App() {
             <div className="container mt-2">
                 <Routes>
                     <Route path="/" element={<Home />} />
+                    <Route path="/sl" element={<Home />} />
                     <Route path="/allLink" element={<AllLink />} />
                 </Routes>
             </div>

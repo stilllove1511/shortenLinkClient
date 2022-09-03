@@ -9,6 +9,7 @@ export default (props) => {
     const [password, setPassword] = useState("")
     const [confirmPassword, setConfirmPassword] = useState("")
     const [errorText, setErrorText] = useState("")
+    const [inforText, setInforText] = useState("")
 
     const [usernameError, setUsernameError] = useState(false)
     const [passwordError, setPasswordError] = useState(false)
@@ -22,25 +23,33 @@ export default (props) => {
     const resEM = useSelector((state) => state.account.EM)
 
     const sendLoginRequest = async () => {
-        dispatch(clearEM())
-        if (!username) {
-            setUsernameError(true)
-            setErrorText("Cannot be empty")
-        } else {
-            setUsernameError(false)
-        }
-        if (!password) {
-            setPasswordError(true)
-            setErrorText("Cannot be empty")
-            return
-        } else {
-            setPasswordError(false)
-        }
-        if (username && password);
-        else return
+        try {
+            dispatch(clearEM())
+            if (!username) {
+                setUsernameError(true)
+                setErrorText("Cannot be empty")
+            } else {
+                setUsernameError(false)
+            }
+            if (!password) {
+                setPasswordError(true)
+                setErrorText("Cannot be empty")
+                return
+            } else {
+                setPasswordError(false)
+            }
+            if (username && password);
+            else return
 
-        setErrorText("")
-        dispatch(login({ username, password }))
+            setErrorText("")
+            setInforText("")
+
+            dispatch(login({ username, password }))
+        } catch (error) {
+            setInforText("")
+
+            setErrorText(error)
+        }
     }
 
     useEffect(() => {
@@ -48,10 +57,23 @@ export default (props) => {
             props.onHide()
             dispatch(clearEM())
         }
-    }, [isSuccess])
+        if (isLoading) {
+            setInforText("Loading ...")
+        } else {
+            setInforText("")
+        }
+    }, [isSuccess, isLoading])
     return (
         <>
-            <Modal show={props.show} onHide={props.onHide}>
+            <Modal
+                show={props.show}
+                onHide={() => {
+                    props.onHide(() => {
+                        setErrorText("")
+                        dispatch(clearEM())
+                    })
+                }}
+            >
                 <Modal.Header closeButton>
                     <Modal.Title>Log in</Modal.Title>
                 </Modal.Header>
@@ -94,10 +116,9 @@ export default (props) => {
                             value={password}
                         />
                     </div>
-                    <div className="mb-3 text-danger error-text">
-                        {errorText ? errorText : ""}{" "}
-                    </div>
-                    <div className="mb-3 text-danger">{resEM ? resEM : ""}</div>
+                    <div className="mb-3 text-danger">{errorText}</div>
+                    <div className="mb-3 text-danger">{resEM}</div>
+                    <div className="mb-3 text-primary">{inforText}</div>
                 </Modal.Body>
 
                 <Modal.Footer>

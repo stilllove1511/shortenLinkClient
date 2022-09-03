@@ -16,8 +16,16 @@ const initialState = {
 export const login = createAsyncThunk(
     "account/loginStatus",
     async (userData) => {
-        const response = await services.loginReq({ ...userData })
-        return response
+        try {
+            const response = await services.loginReq({ ...userData })
+            return response
+        } catch (error) {
+            return {
+                EC: 1,
+                EM: "server haven not responsed",
+                DT: 0,
+            }
+        }
     }
 )
 
@@ -53,18 +61,23 @@ export const accountSlice = createSlice({
             })
             .addCase(login.fulfilled, (state, action) => {
                 state.isLoading = false
-                if (action.payload && action.payload.EC === 0) {
-                    state.isError = false
-                    state.account = {
-                        info: { ...action.payload.DT },
-                        isLogin: true,
+                try {
+                    if (action.payload && action.payload.EC === 0) {
+                        state.isError = false
+                        state.account = {
+                            info: { ...action.payload.DT },
+                            isLogin: true,
+                        }
+                        state.isSuccess = true
+                        state.isError = false
+                    } else {
+                        state.isSuccess = false
+                        state.isError = true
+                        state.EM = action.payload.EM
                     }
-                    state.isSuccess = true
-                    state.isError = false
-                } else {
+                } catch (error) {
                     state.isSuccess = false
                     state.isError = true
-                    state.EM = action.payload.EM
                 }
             })
             .addCase(login.rejected, (state, action) => {
@@ -77,30 +90,17 @@ export const accountSlice = createSlice({
 
             .addCase(sendJwt.pending, (state, action) => {
                 // Add user to the state array
-                state.isLoading = true
-                state.isError = false
-                state.isSuccess = false
             })
             .addCase(sendJwt.fulfilled, (state, action) => {
-                state.isLoading = false
                 if (action.payload && action.payload.EC === 0) {
-                    state.isError = false
                     state.account = {
                         info: { ...action.payload.DT },
                         isLogin: true,
                     }
-                    state.isSuccess = true
-                    state.isError = false
-                } else {
-                    state.isSuccess = false
-                    state.isError = true
                 }
             })
             .addCase(sendJwt.rejected, (state, action) => {
                 // Add user to the state array
-                state.isSuccess = false
-                state.isLoading = false
-                state.isError = true
             })
     },
 })

@@ -5,25 +5,46 @@ import services from "../../services"
 
 export default (props) => {
     const [linkId, setLinkId] = useState(0)
+    const [errorText, setErrorText] = useState("")
+    const [inforText, setInforText] = useState("")
 
     const sendRequest = async () => {
-        let response = await services.deleteLinkReq(props.link.id)
-        if (response.EC === 0) {
-            props.onHide(true)
-        } else {
-            toast.error(response.EM)
+        setInforText("Loading ...")
+        try {
+            let response = await services.deleteLinkReq(props.link.id)
+            if (response) {
+                if (response.EC === 0) {
+                    setInforText("")
+                    props.onHide(true)
+                } else {
+                    setInforText("")
+                    setErrorText(response.EM)
+                }
+            }
+        } catch (error) {
+            setInforText("")
+            setErrorText("server have not responsed")
         }
     }
 
     return (
         <>
-            <Modal show={props.show} onHide={props.onHide}>
+            <Modal
+                show={props.show}
+                onHide={() => {
+                    props.onHide(() => {
+                        setErrorText("")
+                    })
+                }}
+            >
                 <Modal.Header closeButton>
                     <Modal.Title>Delete {props.link.title}</Modal.Title>
                 </Modal.Header>
 
                 <Modal.Body>
                     <div className="mb-3">Delete {props.link.title}</div>
+                    <div className="mb-3 text-danger">{errorText}</div>
+                    <div className="mb-3 text-primary">{inforText}</div>
                 </Modal.Body>
 
                 <Modal.Footer>

@@ -10,53 +10,70 @@ export default (props) => {
     const [originLink, setOriginLink] = useState()
     const [shortenLink, setShortenLink] = useState()
     const [errorText, setErrorText] = useState("")
+    const [inforText, setInforText] = useState("")
 
     const [titleError, setTitleError] = useState(false)
     const [originLinkError, setOriginLinkError] = useState(false)
     const [shortenLinkError, setShortenLinkError] = useState(false)
 
     const sendRequest = async () => {
-        if (!title) {
-            setTitleError(true)
-        } else {
-            setTitleError(false)
-        }
-        if (!originLink) {
-            setOriginLinkError(true)
-        } else {
-            setOriginLinkError(false)
-        }
-        if (!shortenLink) {
-            setShortenLinkError(true)
-            return
-        } else {
-            setShortenLinkError(false)
-        }
-        if (title && originLink && shortenLink);
-        else {
-            return
-        }
-        let response = await services.createLinkReq({
-            title,
-            originLink,
-            shortenLink,
-        })
-        if (response.EC === 0) {
-            props.onHide(true)
-            setTitle("")
-            setOriginLink("")
-            setShortenLink("")
-            setTitleError(false)
-            setOriginLinkError(false)
-            setShortenLinkError(false)
-        } else {
-            setErrorText(response.EM)
+        setInforText("Loading ...")
+        try {
+            if (!title) {
+                setTitleError(true)
+            } else {
+                setTitleError(false)
+            }
+            if (!originLink) {
+                setOriginLinkError(true)
+            } else {
+                setOriginLinkError(false)
+            }
+            if (!shortenLink) {
+                setShortenLinkError(true)
+                return
+            } else {
+                setShortenLinkError(false)
+            }
+            if (title && originLink && shortenLink);
+            else {
+                return
+            }
+
+            let response = await services.createLinkReq({
+                title,
+                originLink,
+                shortenLink,
+            })
+            if (response.EC === 0) {
+                props.onHide(true)
+                setTitle("")
+                setOriginLink("")
+                setShortenLink("")
+                setTitleError(false)
+                setOriginLinkError(false)
+                setShortenLinkError(false)
+                setInforText("")
+            } else {
+                setErrorText(response.EM)
+                setInforText("")
+            }
+        } catch (error) {
+            setInforText("")
+            setErrorText("server have not responsed")
         }
     }
 
     return (
         <>
-            <Modal show={props.show} onHide={props.onHide}>
+            <Modal
+                show={props.show}
+                onHide={() => {
+                    props.onHide(() => {
+                        setErrorText("")
+                    })
+                }}
+            >
                 <Modal.Header closeButton>
                     <Modal.Title>Create Link</Modal.Title>
                 </Modal.Header>
@@ -118,7 +135,8 @@ export default (props) => {
                             value={shortenLink}
                         />
                     </div>
-                    <div className="mb-3">{errorText}</div>
+                    <div className="mb-3 text-danger">{errorText}</div>
+                    <div className="mb-3 text-primary">{inforText}</div>
                 </Modal.Body>
 
                 <Modal.Footer>
