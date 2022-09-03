@@ -5,13 +5,21 @@ import services from "../services"
 
 export default (props) => {
     const [linksList, setLinksList] = useState([])
+    const [isFetchingLink, setIsFetchingLink] = useState(false)
 
     const fetchAllLink = async () => {
-        let res = await services.getAllLinkReq()
-        if (res && res.EC === 0) {
-            setLinksList(res.DT)
-        } else {
-            toast.error("some thonf wrong!!")
+        setIsFetchingLink(true)
+        try {
+            let res = await services.getAllLinkReq()
+            if (res && res.EC === 0) {
+                setLinksList(res.DT)
+                setIsFetchingLink(false)
+            } else {
+                toast.error("some thonf wrong!!")
+                setIsFetchingLink(false)
+            }
+        } catch (error) {
+            setIsFetchingLink(false)
         }
     }
 
@@ -19,7 +27,9 @@ export default (props) => {
         fetchAllLink()
     }, [])
 
-    return (
+    return isFetchingLink ? (
+        <>Loading links ...</>
+    ) : (
         <>
             <div className="row g-2">
                 {linksList.map((link, index) => (
@@ -31,15 +41,13 @@ export default (props) => {
                         }}
                     >
                         <div className="card-body">
-                            <h5 className="card-title">{link.title}</h5>
-                            <p className="card-text">
+                            <span className="card-text">
                                 <b>Original link: </b>
                                 {link.originLink}
-                            </p>
-                            <p className="card-text">
+                                <br />
                                 <b>Shorten link: </b>
                                 {baseURL + link.shortenLink}
-                            </p>
+                            </span>
                         </div>
                     </div>
                 ))}

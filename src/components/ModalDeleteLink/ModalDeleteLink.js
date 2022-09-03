@@ -15,7 +15,7 @@ export default (props) => {
             if (response) {
                 if (response.EC === 0) {
                     setInforText("")
-                    props.onHide(true)
+                    props.onHide(true, () => {})
                 } else {
                     setInforText("")
                     setErrorText(response.EM)
@@ -31,8 +31,8 @@ export default (props) => {
         <>
             <Modal
                 show={props.show}
-                onHide={() => {
-                    props.onHide(() => {
+                onHide={(isRefresh) => {
+                    props.onHide(isRefresh, () => {
                         setErrorText("")
                     })
                 }}

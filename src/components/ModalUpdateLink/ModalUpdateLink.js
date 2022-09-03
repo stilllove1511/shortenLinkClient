@@ -10,12 +10,16 @@ export default (props) => {
     const [originLink, setOriginLink] = useState("")
     const [shortenLink, setShortenLink] = useState("")
     const [errorText, setErrorText] = useState("")
+    const [inforText, setInforText] = useState("")
+    const [successText, setSuccessText] = useState("")
 
     const [titleError, setTitleError] = useState(false)
     const [originLinkError, setOriginLinkError] = useState(false)
     const [shortenLinkError, setShortenLinkError] = useState(false)
 
     const sendRequest = async () => {
+        setInforText("Loading ...")
+        setSuccessText("")
         if (!title) {
             setTitleError(true)
         } else {
@@ -43,16 +47,19 @@ export default (props) => {
             shortenLink,
         })
         if (response.EC === 0) {
-            props.onHide(true)
-            setTitle("")
-            setOriginLink("")
-            setShortenLink("")
+            // props.onHide(true)
+            // setTitle("")
+            // setOriginLink("")
+            // setShortenLink("")
+            props.onHide(true, () => {})
             setTitleError(false)
             setOriginLinkError(false)
             setShortenLinkError(false)
+            setSuccessText(response.EM)
         } else {
             setErrorText(response.EM)
         }
+        setInforText("")
     }
 
     useEffect(() => {
@@ -63,7 +70,17 @@ export default (props) => {
 
     return (
         <>
-            <Modal show={props.show} onHide={props.onHide}>
+            <Modal
+                show={props.show}
+                onHide={() => {
+                    props.onHide()
+                    setTitle("")
+                    setOriginLink("")
+                    setShortenLink("")
+                    setSuccessText("")
+                    setErrorText("")
+                }}
+            >
                 <Modal.Header closeButton>
                     <Modal.Title>Update Link</Modal.Title>
                 </Modal.Header>
@@ -125,7 +142,9 @@ export default (props) => {
                             value={shortenLink}
                         />
                     </div>
-                    <div className="mb-3">{errorText}</div>
+                    <div className="mb-3 text-danger">{errorText}</div>
+                    <div className="mb-3 text-primary">{inforText}</div>
+                    <div className="mb-3 text-success">{successText}</div>
                 </Modal.Body>
 
                 <Modal.Footer>

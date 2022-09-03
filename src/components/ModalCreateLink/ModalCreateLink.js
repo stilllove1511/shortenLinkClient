@@ -46,7 +46,7 @@ export default (props) => {
                 shortenLink,
             })
             if (response.EC === 0) {
-                props.onHide(true)
+                props.onHide(true, () => {})
                 setTitle("")
                 setOriginLink("")
                 setShortenLink("")
@@ -66,14 +66,7 @@ export default (props) => {
 
     return (
         <>
-            <Modal
-                show={props.show}
-                onHide={() => {
-                    props.onHide(() => {
-                        setErrorText("")
-                    })
-                }}
-            >
+            <Modal show={props.show} onHide={props.onHide}>
                 <Modal.Header closeButton>
                     <Modal.Title>Create Link</Modal.Title>
                 </Modal.Header>

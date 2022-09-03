@@ -8,12 +8,14 @@ export default (props) => {
     const [password, setPassword] = useState("")
     const [confirmPassword, setConfirmPassword] = useState("")
     const [errorText, setErrorText] = useState("")
+    const [inforText, setInforText] = useState("")
 
     const [usernameError, setUsernameError] = useState(false)
     const [passwordError, setPasswordError] = useState(false)
     const [confirmPasswordError, setConfirmPasswordError] = useState(false)
 
     const sendRequest = async () => {
+        setInforText("Loading ...")
         if (!username) {
             setUsernameError(true)
             setPasswordError(false)
@@ -54,6 +56,7 @@ export default (props) => {
             setConfirmPasswordError(false)
             setErrorText(res.EM)
         }
+        setInforText("")
     }
 
     return (
@@ -110,9 +113,8 @@ export default (props) => {
                             value={confirmPassword}
                         />
                     </div>
-                    <div className="mb-3 text-danger error-text">
-                        {errorText ? errorText : ""}{" "}
-                    </div>
+                    <div className="mb-3 text-danger">{errorText}</div>
+                    <div className="mb-3 text-primary">{inforText}</div>
                 </Modal.Body>
 
                 <Modal.Footer>

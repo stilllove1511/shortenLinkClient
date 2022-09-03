@@ -7,11 +7,18 @@ import { redirectorURL } from "../constants"
 import services from "../services"
 import ModalSignUp from "../components/ModalSignUp/ModalSignUp"
 import ModalDeleteLink from "../components/ModalDeleteLink/ModalDeleteLink"
+import { Fab } from "@mui/material"
+import AddIcon from "@mui/icons-material/Add"
+import RefreshIcon from "@mui/icons-material/Refresh"
+import EditIcon from "@mui/icons-material/Edit"
+import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline"
+import "./Home.scss"
 
 export default (props) => {
     const account = useSelector((state) => state.account.account)
     const jwt = useSelector((state) => state.account.jwt)
     const [linksList, setLinksList] = useState([])
+    const [isFetchingLink, setIsFetchingLink] = useState(true)
     const [isShowUpdateLinkModal, setIsShowUpdateLinkModal] = useState(false)
     const [isShowSignUpModal, setIsShowSignUpModal] = useState(false)
     const [isShowCreateLinkModal, setIsShowCreateLinkModal] = useState(false)
@@ -29,11 +36,17 @@ export default (props) => {
         setIsShowDeleteLinkModal(true)
     }
     const fetchLink = async () => {
-        let res = await services.getLinkReq()
-        if (res && res.EC === 0) {
-            setLinksList(res.DT)
-        } else {
-            toast.error("some thonf wrong!!")
+        try {
+            let res = await services.getLinkReq()
+            if (res && res.EC === 0) {
+                setLinksList(res.DT)
+                setIsFetchingLink(false)
+            } else {
+                toast.error("some thonf wrong!!")
+                setIsFetchingLink(false)
+            }
+        } catch (error) {
+            setIsFetchingLink(false)
         }
     }
 
@@ -67,45 +80,67 @@ export default (props) => {
                 }}
             />
         </>
+    ) : isFetchingLink ? (
+        <>Loading your links ...</>
     ) : (
         <>
-            <button
-                className="btn btn-success"
+            <Fab
+                sx={{ position: "fixed", bottom: 16, right: 16 }}
+                color="primary"
+                aria-label="add"
                 onClick={() => {
                     setIsShowCreateLinkModal(true)
                 }}
             >
-                Create link
-            </button>
+                <AddIcon />
+            </Fab>
+            <Fab
+                sx={{ position: "fixed", bottom: 80, right: 16 }}
+                color="primary"
+                aria-label="add"
+                onClick={() => {
+                    setIsFetchingLink(true)
+                    fetchLink()
+                }}
+            >
+                <RefreshIcon />
+            </Fab>
+
             <div className="row g-2">
                 {linksList.map((link, index) => (
-                    <div key={"link" + index} className="card">
-                        <div className="card-body">
-                            <h5 className="card-title">{link.title}</h5>
-                            <p className="card-text">
-                                <b>Shorten link: </b>
-                                {redirectorURL + link.shortenLink}
-                            </p>
-                            <button
-                                className="btn btn-warning"
-                                onClick={() => {
-                                    setLinkId(link.id)
+                    <div className="col">
+                        <div
+                            key={"link" + index}
+                            className="card hover max-width-90"
+                        >
+                            <div className="card-body">
+                                <span className="card-title">
+                                    <b>{link.title} </b>({link.originLink})
+                                </span>
+                                <br />
 
-                                    setLinkData(link)
+                                <span className="card-text">
+                                    <u>{redirectorURL + link.shortenLink}</u>
+                                </span>
+                                <div className="hover__hover">
+                                    <EditIcon
+                                        className="text-warning"
+                                        onClick={() => {
+                                            setLinkId(link.id)
 
-                                    setIsShowUpdateLinkModal(true)
-                                }}
-                            >
-                                Update
-                            </button>
-                            <button
-                                className="btn btn-danger"
-                                onClick={() => {
-                                    handleDeleteLink(link)
-                                }}
-                            >
-                                Delete
-                            </button>
+                                            setLinkData(link)
+
+                                            setIsShowUpdateLinkModal(true)
+                                        }}
+                                    />
+                                    <DeleteOutlineIcon
+                                        className="text-danger"
+                                        onClick={() => {
+                                            handleDeleteLink(link)
+                                        }}
+                                    />
+                                </div>
+                            </div>
                         </div>
                     </div>
                 ))}
@@ -121,16 +156,18 @@ export default (props) => {
             />
             <ModalCreateLink
                 show={isShowCreateLinkModal}
-                onHide={async (isRefresh = false) => {
+                onHide={async (isRefresh = false, callback) => {
                     setIsShowCreateLinkModal(false)
+                    callback()
                     if (isRefresh) await fetchLink()
                 }}
             />
             <ModalDeleteLink
                 link={linkData}
                 show={isShowDeleteLinkModal}
-                onHide={async (isRefresh = false) => {
+                onHide={async (isRefresh = false, callback) => {
                     setIsShowDeleteLinkModal(false)
+                    callback()
                     if (isRefresh) await fetchLink()
                 }}
             />
