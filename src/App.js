@@ -25,7 +25,7 @@ function App() {
                     <Route path="/allLink" element={<AllLink />} />
                 </Routes>
             </div>
-            <ToastContainer position="bottom-right" />
+            <ToastContainer position="top-center" />
         </BrowserRouter>
     )
 }

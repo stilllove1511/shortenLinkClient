@@ -2,6 +2,7 @@ import { Fragment, useEffect, useState } from "react"
 import { toast } from "react-toastify"
 import { baseURL } from "../constants"
 import services from "../services"
+import { redirectorURL } from "../constants"
 
 export default (props) => {
     const [linksList, setLinksList] = useState([])
@@ -33,17 +34,25 @@ export default (props) => {
         <>
             <div className="row g-2">
                 {linksList.map((link, index) => (
-                    <div
-                        key={"link" + index}
-                        className="card"
-                        onClick={() => {
-                            // window.location.replace(link.originLink)
-                        }}
-                    >
-                        <div className="card-body">
+                    <div key={"link" + index} className="card">
+                        <div
+                            className="card-body"
+                            onClick={() => {
+                                navigator.clipboard.writeText(
+                                    redirectorURL + link.shortenLink
+                                )
+                                toast.success("copied to clipboad")
+                            }}
+                        >
                             <span className="card-text">
                                 <b>Original link: </b>
-                                {link.originLink}
+                                <u
+                                    onClick={() => {
+                                        window.open(link.originLink)
+                                    }}
+                                >
+                                    {link.originLink}
+                                </u>
                                 <br />
                                 <b>Shorten link: </b>
                                 {baseURL + link.shortenLink}

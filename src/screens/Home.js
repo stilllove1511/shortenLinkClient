@@ -112,6 +112,12 @@ export default (props) => {
                         <div
                             key={"link" + index}
                             className="card hover max-width-90"
+                            onClick={() => {
+                                navigator.clipboard.writeText(
+                                    redirectorURL + link.shortenLink
+                                )
+                                toast.success("copied to clipboad")
+                            }}
                         >
                             <div className="card-body">
                                 <span className="card-title">
@@ -120,7 +126,7 @@ export default (props) => {
                                 <br />
 
                                 <span className="card-text">
-                                    <u>{redirectorURL + link.shortenLink}</u>
+                                    {redirectorURL + link.shortenLink}
                                 </span>
                                 <div className="hover__hover">
                                     <EditIcon
