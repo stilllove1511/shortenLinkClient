@@ -41,7 +41,6 @@ export default (props) => {
                                 navigator.clipboard.writeText(
                                     redirectorURL + link.shortenLink
                                 )
-                                toast.success("copied to clipboad")
                             }}
                         >
                             <span className="card-text">
