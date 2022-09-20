@@ -3,6 +3,7 @@ import { useState, useEffect } from "react"
 import { login, clearEM } from "../../redux/features/account/accountSlice"
 import { useSelector, useDispatch } from "react-redux"
 import { toast } from "react-toastify"
+import { baseURL } from "../../constants"
 
 export default (props) => {
     const [username, setUsername] = useState("")
@@ -116,6 +117,14 @@ export default (props) => {
                             value={password}
                         />
                     </div>
+                    <u
+                        onClick={() => {
+                            window.location.href =
+                                baseURL + "login/federated/google"
+                        }}
+                    >
+                        Or login with Google
+                    </u>
                     <div className="mb-3 text-danger">{errorText}</div>
                     <div className="mb-3 text-danger">{resEM}</div>
                     <div className="mb-3 text-primary">{inforText}</div>
