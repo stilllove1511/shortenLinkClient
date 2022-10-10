@@ -6,18 +6,17 @@ import { getLink } from "../../redux/features/link/linkSlice"
 import services from "../../services"
 
 export default (props) => {
-    const [title, setTitle] = useState()
-    const [originLink, setOriginLink] = useState()
-    const [shortenLink, setShortenLink] = useState()
-    const [errorText, setErrorText] = useState("")
-    const [inforText, setInforText] = useState("")
+    const [title, setTitle] = useState("")
+    const [originLink, setOriginLink] = useState("")
+    const [shortenLink, setShortenLink] = useState("")
+    const [Alert, setAlert] = useState("")
 
     const [titleError, setTitleError] = useState(false)
     const [originLinkError, setOriginLinkError] = useState(false)
     const [shortenLinkError, setShortenLinkError] = useState(false)
 
     const sendRequest = async () => {
-        setInforText("Loading ...")
+        setAlert(<div className="text-primary">Loading ...</div>)
         try {
             if (!title) {
                 setTitleError(true)
@@ -43,24 +42,25 @@ export default (props) => {
             let response = await services.createLinkReq({
                 title,
                 originLink,
-                shortenLink,
+                shortenLink
             })
             if (response.EC === 0) {
-                props.onHide(true, () => {})
+                props.onHide()
                 setTitle("")
                 setOriginLink("")
                 setShortenLink("")
                 setTitleError(false)
                 setOriginLinkError(false)
                 setShortenLinkError(false)
-                setInforText("")
+                setAlert("")
+                props.refresh()
             } else {
-                setErrorText(response.EM)
-                setInforText("")
+                setAlert(<div className="text-danger">{response.EM}</div>)
             }
         } catch (error) {
-            setInforText("")
-            setErrorText("server have not responsed")
+            setAlert(
+                <div className="text-danger">Server have not responsed</div>
+            )
         }
     }
 
@@ -128,8 +128,7 @@ export default (props) => {
                             value={shortenLink}
                         />
                     </div>
-                    <div className="mb-3 text-danger">{errorText}</div>
-                    <div className="mb-3 text-primary">{inforText}</div>
+                    {Alert}
                 </Modal.Body>
 
                 <Modal.Footer>

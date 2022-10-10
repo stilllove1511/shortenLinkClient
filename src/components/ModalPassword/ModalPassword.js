@@ -1,57 +1,61 @@
 import { Modal, Button } from "react-bootstrap"
 import { useState, useEffect } from "react"
-import { toast } from "react-toastify"
 import services from "../../services"
 
 export default (props) => {
     const [password, setPassword] = useState("")
     const [confirmPassword, setConfirmPassword] = useState("")
-    const [successText, setSuccessText] = useState("")
-    const [errorText, setErrorText] = useState("")
-    const [inforText, setInforText] = useState("")
+    const [Alert, setAlert] = useState("")
 
     const [passwordError, setPasswordError] = useState(false)
     const [confirmPasswordError, setConfirmPasswordError] = useState(false)
 
     const sendRequest = async () => {
-        setSuccessText("")
-        setErrorText("")
-        setInforText("Loading ...")
+        setAlert(<div className="text-primary">Loading ...</div>)
         try {
             if (!password) {
                 setPasswordError(true)
                 setConfirmPasswordError(false)
-                setErrorText("Please enter your password")
+                setAlert(<div className="text-danger">Enter password</div>)
                 return
+            } else {
+                setPasswordError(false)
             }
             if (!confirmPassword) {
                 setPasswordError(false)
 
                 setConfirmPasswordError(true)
-                setErrorText("Please comfirm your password")
+                setAlert(<div className="text-danger">Confirm password</div>)
                 return
+            } else {
+                setConfirmPasswordError(false)
             }
             if (password !== confirmPassword) {
                 setConfirmPasswordError(true)
-                setErrorText("your password is not confrim")
+                setAlert(
+                    <div className="text-danger">
+                        your password is not confrim
+                    </div>
+                )
                 return
             }
             let res = await services.changePasswordReq({ password })
             if (res.EC === 0) {
-                setSuccessText(res.EM)
+                setAlert(<div className="text-success">{res.EM}</div>)
                 setPasswordError(false)
                 setConfirmPasswordError(false)
                 setPassword("")
                 setConfirmPassword("")
-                setErrorText("")
             } else {
                 setPasswordError(false)
                 setConfirmPasswordError(false)
-                setErrorText(res.EM)
+                setAlert(<div className="text-danger">{res.EM}</div>)
             }
+            setAlert(<div className="text-danger">{res.EM}</div>)
         } catch (error) {
-            setInforText("")
-            setErrorText("Server have not responsed")
+            setAlert(
+                <div className="text-danger">Server have not responsed</div>
+            )
         }
     }
 
@@ -93,9 +97,7 @@ export default (props) => {
                             value={confirmPassword}
                         />
                     </div>
-                    <div className="mb-3 text-danger">{errorText}</div>
-                    <div className="mb-3 text-primary">{inforText}</div>
-                    <div className="mb-3 text-success">{successText}</div>
+                    {Alert}
                 </Modal.Body>
 
                 <Modal.Footer>

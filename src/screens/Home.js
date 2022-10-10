@@ -28,7 +28,7 @@ export default (props) => {
         id: 0,
         title: "",
         originLink: "",
-        shortenLink: "",
+        shortenLink: ""
     })
 
     const handleDeleteLink = async (link) => {
@@ -150,31 +150,30 @@ export default (props) => {
                     </div>
                 ))}
             </div>
-            <ModalUpdateLink
-                show={isShowUpdateLinkModal}
-                onHide={async (isRefresh = false) => {
-                    setIsShowUpdateLinkModal(false)
-                    if (isRefresh) await fetchLink()
-                }}
-                linkId={linkId}
-                linkData={linkData}
-            />
+
             <ModalCreateLink
                 show={isShowCreateLinkModal}
-                onHide={async (isRefresh = false, callback) => {
+                onHide={() => {
                     setIsShowCreateLinkModal(false)
-                    callback()
-                    if (isRefresh) await fetchLink()
                 }}
+                refresh={fetchLink}
             />
             <ModalDeleteLink
                 link={linkData}
                 show={isShowDeleteLinkModal}
-                onHide={async (isRefresh = false, callback) => {
+                onHide={() => {
                     setIsShowDeleteLinkModal(false)
-                    callback()
-                    if (isRefresh) await fetchLink()
                 }}
+                refresh={fetchLink}
+            />
+            <ModalUpdateLink
+                show={isShowUpdateLinkModal}
+                onHide={() => {
+                    setIsShowUpdateLinkModal(false)
+                }}
+                refresh={fetchLink}
+                linkId={linkId}
+                linkData={linkData}
             />
         </>
     )

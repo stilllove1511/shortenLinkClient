@@ -2,20 +2,14 @@ import { Modal, Button } from "react-bootstrap"
 import { useState, useEffect } from "react"
 import { login, clearEM } from "../../redux/features/account/accountSlice"
 import { useSelector, useDispatch } from "react-redux"
-import { toast } from "react-toastify"
 import { baseURL } from "../../constants"
 
 export default (props) => {
     const [username, setUsername] = useState("")
     const [password, setPassword] = useState("")
-    const [confirmPassword, setConfirmPassword] = useState("")
-    const [errorText, setErrorText] = useState("")
-    const [inforText, setInforText] = useState("")
-
+    const [Alert, setAlert] = useState("")
     const [usernameError, setUsernameError] = useState(false)
     const [passwordError, setPasswordError] = useState(false)
-    const [confirmPasswordError, setConfirmPasswordError] = useState(false)
-
     const dispatch = useDispatch()
     const account = useSelector((state) => state.account.account)
     const isLoading = useSelector((state) => state.account.isLoading)
@@ -25,16 +19,24 @@ export default (props) => {
 
     const sendLoginRequest = async () => {
         try {
-            dispatch(clearEM())
+            setAlert("")
             if (!username) {
                 setUsernameError(true)
-                setErrorText("Cannot be empty")
+                setAlert(
+                    <div className="text-danger">
+                        These fields cannot be empty
+                    </div>
+                )
             } else {
                 setUsernameError(false)
             }
             if (!password) {
                 setPasswordError(true)
-                setErrorText("Cannot be empty")
+                setAlert(
+                    <div className="text-danger">
+                        These fields cannot be empty
+                    </div>
+                )
                 return
             } else {
                 setPasswordError(false)
@@ -42,14 +44,11 @@ export default (props) => {
             if (username && password);
             else return
 
-            setErrorText("")
-            setInforText("")
+            setAlert("")
 
             dispatch(login({ username, password }))
         } catch (error) {
-            setInforText("")
-
-            setErrorText(error)
+            setAlert(<div className="text-dander">{error}</div>)
         }
     }
 
@@ -59,9 +58,9 @@ export default (props) => {
             dispatch(clearEM())
         }
         if (isLoading) {
-            setInforText("Loading ...")
+            setAlert(<div className="text-primary">{"Loading ..."}</div>)
         } else {
-            setInforText("")
+            setAlert("")
         }
     }, [isSuccess, isLoading])
     return (
@@ -69,10 +68,7 @@ export default (props) => {
             <Modal
                 show={props.show}
                 onHide={() => {
-                    props.onHide(() => {
-                        setErrorText("")
-                        dispatch(clearEM())
-                    })
+                    props.onHide()
                 }}
             >
                 <Modal.Header closeButton>
@@ -125,9 +121,7 @@ export default (props) => {
                     >
                         Or login with Google
                     </u>
-                    <div className="mb-3 text-danger">{errorText}</div>
-                    <div className="mb-3 text-danger">{resEM}</div>
-                    <div className="mb-3 text-primary">{inforText}</div>
+                    {Alert || <div className="text-danger">{resEM}</div>}
                 </Modal.Body>
 
                 <Modal.Footer>

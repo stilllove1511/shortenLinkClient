@@ -5,25 +5,24 @@ import services from "../../services"
 
 export default (props) => {
     const [linkId, setLinkId] = useState(0)
-    const [errorText, setErrorText] = useState("")
-    const [inforText, setInforText] = useState("")
-
+    const [Alert, setAlert] = useState("")
     const sendRequest = async () => {
-        setInforText("Loading ...")
+        setAlert(<div className="text-primary">Loading ...</div>)
         try {
             let response = await services.deleteLinkReq(props.link.id)
             if (response) {
                 if (response.EC === 0) {
-                    setInforText("")
-                    props.onHide(true, () => {})
+                    setAlert("")
+                    props.onHide()
+                    props.refresh()
                 } else {
-                    setInforText("")
-                    setErrorText(response.EM)
+                    setAlert(<div className="text-danger">{response.EM}</div>)
                 }
             }
         } catch (error) {
-            setInforText("")
-            setErrorText("server have not responsed")
+            setAlert(
+                <div className="text-danger">server have not responsed</div>
+            )
         }
     }
 
@@ -31,10 +30,9 @@ export default (props) => {
         <>
             <Modal
                 show={props.show}
-                onHide={(isRefresh) => {
-                    props.onHide(isRefresh, () => {
-                        setErrorText("")
-                    })
+                onHide={() => {
+                    props.onHide()
+                    setAlert("")
                 }}
             >
                 <Modal.Header closeButton>
@@ -43,8 +41,7 @@ export default (props) => {
 
                 <Modal.Body>
                     <div className="mb-3">Delete {props.link.title}</div>
-                    <div className="mb-3 text-danger">{errorText}</div>
-                    <div className="mb-3 text-primary">{inforText}</div>
+                    {Alert}
                 </Modal.Body>
 
                 <Modal.Footer>

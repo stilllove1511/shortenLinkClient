@@ -1,25 +1,19 @@
 import { Button, Modal } from "react-bootstrap"
 import { useEffect, useState } from "react"
-import { useDispatch, useSelector } from "react-redux"
-import { toast } from "react-toastify"
-import { getLink } from "../../redux/features/link/linkSlice"
 import services from "../../services"
 
 export default (props) => {
     const [title, setTitle] = useState("")
     const [originLink, setOriginLink] = useState("")
     const [shortenLink, setShortenLink] = useState("")
-    const [errorText, setErrorText] = useState("")
-    const [inforText, setInforText] = useState("")
-    const [successText, setSuccessText] = useState("")
+    const [Alert, setAlert] = useState("")
 
     const [titleError, setTitleError] = useState(false)
     const [originLinkError, setOriginLinkError] = useState(false)
     const [shortenLinkError, setShortenLinkError] = useState(false)
 
     const sendRequest = async () => {
-        setInforText("Loading ...")
-        setSuccessText("")
+        setAlert(<div className="text-primary">Loading ...</div>)
         if (!title) {
             setTitleError(true)
         } else {
@@ -44,22 +38,22 @@ export default (props) => {
             id: props.linkData.id,
             title,
             originLink,
-            shortenLink,
+            shortenLink
         })
         if (response.EC === 0) {
             // props.onHide(true)
             // setTitle("")
             // setOriginLink("")
             // setShortenLink("")
-            props.onHide(true, () => {})
+            props.onHide()
             setTitleError(false)
             setOriginLinkError(false)
             setShortenLinkError(false)
-            setSuccessText(response.EM)
+            setAlert(<div className="text-success">{response.EM}</div>)
+            props.refresh()
         } else {
-            setErrorText(response.EM)
+            setAlert(<div className="text-danger">{response.EM}</div>)
         }
-        setInforText("")
     }
 
     useEffect(() => {
@@ -74,11 +68,6 @@ export default (props) => {
                 show={props.show}
                 onHide={() => {
                     props.onHide()
-                    setTitle("")
-                    setOriginLink("")
-                    setShortenLink("")
-                    setSuccessText("")
-                    setErrorText("")
                 }}
             >
                 <Modal.Header closeButton>
@@ -142,9 +131,7 @@ export default (props) => {
                             value={shortenLink}
                         />
                     </div>
-                    <div className="mb-3 text-danger">{errorText}</div>
-                    <div className="mb-3 text-primary">{inforText}</div>
-                    <div className="mb-3 text-success">{successText}</div>
+                    {Alert}
                 </Modal.Body>
 
                 <Modal.Footer>

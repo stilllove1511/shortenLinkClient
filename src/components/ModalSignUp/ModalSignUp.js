@@ -7,27 +7,31 @@ export default (props) => {
     const [username, setUsername] = useState("")
     const [password, setPassword] = useState("")
     const [confirmPassword, setConfirmPassword] = useState("")
-    const [errorText, setErrorText] = useState("")
-    const [inforText, setInforText] = useState("")
+    const [Alert, setAlert] = useState("")
 
     const [usernameError, setUsernameError] = useState(false)
     const [passwordError, setPasswordError] = useState(false)
     const [confirmPasswordError, setConfirmPasswordError] = useState(false)
 
     const sendRequest = async () => {
-        setInforText("Loading ...")
+        setAlert(<div className="text-primary">Loading ...</div>)
+
         if (!username) {
             setUsernameError(true)
             setPasswordError(false)
             setConfirmPasswordError(false)
-            setErrorText("Please enter your username")
+            setAlert(
+                <div className="text-danger">Please enter your username</div>
+            )
             return
         }
         if (!password) {
             setUsernameError(false)
             setPasswordError(true)
             setConfirmPasswordError(false)
-            setErrorText("Please enter your password")
+            setAlert(
+                <div className="text-danger">Please enter your password</div>
+            )
             return
         }
         if (!confirmPassword) {
@@ -35,12 +39,16 @@ export default (props) => {
             setPasswordError(false)
 
             setConfirmPasswordError(true)
-            setErrorText("Please comfirm your password")
+            setAlert(
+                <div className="text-danger">Please comfirm your password</div>
+            )
             return
         }
         if (password !== confirmPassword) {
             setConfirmPasswordError(true)
-            setErrorText("your password is not confrim")
+            setAlert(
+                <div className="text-danger">your password is not confrim</div>
+            )
             return
         }
         let res = await services.sendSignUpReq({ username, password })
@@ -49,14 +57,13 @@ export default (props) => {
             props.onHide()
             setUsername("")
             setPassword("")
-            setErrorText("")
+            setAlert("")
         } else {
             setUsernameError(false)
             setPasswordError(false)
             setConfirmPasswordError(false)
-            setErrorText(res.EM)
+            setAlert(<div className="text-danger">{res.EM}</div>)
         }
-        setInforText("")
     }
 
     return (
@@ -113,8 +120,7 @@ export default (props) => {
                             value={confirmPassword}
                         />
                     </div>
-                    <div className="mb-3 text-danger">{errorText}</div>
-                    <div className="mb-3 text-primary">{inforText}</div>
+                    {Alert}
                 </Modal.Body>
 
                 <Modal.Footer>
