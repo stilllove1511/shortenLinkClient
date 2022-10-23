@@ -71,7 +71,7 @@ export default (props) => {
                                     : "form-control"
                             }
                             id="title"
-                            value={title}
+                            value={title || props.linkData.title}
                         />
                     </div>
 
@@ -91,7 +91,7 @@ export default (props) => {
                             onChange={(event) =>
                                 setOriginLink(event.target.value)
                             }
-                            value={originLink}
+                            value={originLink || props.linkData.originLink}
                         />
                     </div>
 
@@ -111,7 +111,7 @@ export default (props) => {
                             onChange={(event) =>
                                 setShortenLink(event.target.value)
                             }
-                            value={shortenLink}
+                            value={shortenLink || props.linkData.shortenLink}
                         />
                     </div>
                     {Alert}
