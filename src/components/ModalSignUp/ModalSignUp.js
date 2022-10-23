@@ -2,55 +2,21 @@ import { Modal, Button } from "react-bootstrap"
 import { useState, useEffect } from "react"
 import { toast } from "react-toastify"
 import services from "../../services"
+import { useForm } from "react-hook-form"
 
 export default (props) => {
+    const {
+        register,
+        handleSubmit,
+        formState: { errors }
+    } = useForm()
     const [username, setUsername] = useState("")
     const [password, setPassword] = useState("")
     const [confirmPassword, setConfirmPassword] = useState("")
     const [Alert, setAlert] = useState("")
 
-    const [usernameError, setUsernameError] = useState(false)
-    const [passwordError, setPasswordError] = useState(false)
-    const [confirmPasswordError, setConfirmPasswordError] = useState(false)
-
     const sendRequest = async () => {
         setAlert(<div className="text-primary">Loading ...</div>)
-
-        if (!username) {
-            setUsernameError(true)
-            setPasswordError(false)
-            setConfirmPasswordError(false)
-            setAlert(
-                <div className="text-danger">Please enter your username</div>
-            )
-            return
-        }
-        if (!password) {
-            setUsernameError(false)
-            setPasswordError(true)
-            setConfirmPasswordError(false)
-            setAlert(
-                <div className="text-danger">Please enter your password</div>
-            )
-            return
-        }
-        if (!confirmPassword) {
-            setUsernameError(false)
-            setPasswordError(false)
-
-            setConfirmPasswordError(true)
-            setAlert(
-                <div className="text-danger">Please comfirm your password</div>
-            )
-            return
-        }
-        if (password !== confirmPassword) {
-            setConfirmPasswordError(true)
-            setAlert(
-                <div className="text-danger">your password is not confrim</div>
-            )
-            return
-        }
         let res = await services.sendSignUpReq({ username, password })
         if (res.EC === 0) {
             toast.success("sign up success")
@@ -59,9 +25,6 @@ export default (props) => {
             setPassword("")
             setAlert("")
         } else {
-            setUsernameError(false)
-            setPasswordError(false)
-            setConfirmPasswordError(false)
             setAlert(<div className="text-danger">{res.EM}</div>)
         }
     }
@@ -77,12 +40,13 @@ export default (props) => {
                     <div className="mb-3">
                         <label className="form-label">Username</label>
                         <input
+                            {...register("username", { required: true })}
                             onChange={(event) => {
                                 setUsername(event.target.value)
                             }}
                             type="text"
                             className={
-                                usernameError
+                                errors.username
                                     ? "form-control  is-invalid"
                                     : "form-control"
                             }
@@ -93,9 +57,10 @@ export default (props) => {
                     <div className="mb-3">
                         <label className="form-label">Password</label>
                         <input
+                            {...register("password", { required: true })}
                             type="password"
                             className={
-                                passwordError
+                                errors.password
                                     ? "form-control  is-invalid"
                                     : "form-control"
                             }
@@ -108,9 +73,17 @@ export default (props) => {
                     <div className="mb-3">
                         <label className="form-label">Comfirm password</label>
                         <input
+                            {...register("confirmPassword", {
+                                required: true,
+                                validate: (confirmPassword) => {
+                                    if (confirmPassword === password)
+                                        return true
+                                    else return "not same"
+                                }
+                            })}
                             type="password"
                             className={
-                                confirmPasswordError
+                                errors.confirmPassword
                                     ? "form-control  is-invalid"
                                     : "form-control"
                             }
@@ -119,12 +92,20 @@ export default (props) => {
                             }
                             value={confirmPassword}
                         />
+                        {
+                            <div className="text-danger">
+                                {errors.confirmPassword?.message}
+                            </div>
+                        }
                     </div>
                     {Alert}
                 </Modal.Body>
 
                 <Modal.Footer>
-                    <Button variant="primary" onClick={sendRequest}>
+                    <Button
+                        variant="primary"
+                        onClick={handleSubmit(sendRequest)}
+                    >
                         Send
                     </Button>
                 </Modal.Footer>

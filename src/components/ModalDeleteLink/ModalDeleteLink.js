@@ -1,10 +1,8 @@
 import { Button, Modal } from "react-bootstrap"
 import { useEffect, useState } from "react"
-import { toast } from "react-toastify"
 import services from "../../services"
 
 export default (props) => {
-    const [linkId, setLinkId] = useState(0)
     const [Alert, setAlert] = useState("")
     const sendRequest = async () => {
         setAlert(<div className="text-primary">Loading ...</div>)

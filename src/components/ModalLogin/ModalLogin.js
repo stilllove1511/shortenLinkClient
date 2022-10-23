@@ -3,49 +3,24 @@ import { useState, useEffect } from "react"
 import { login, clearEM } from "../../redux/features/account/accountSlice"
 import { useSelector, useDispatch } from "react-redux"
 import { baseURL } from "../../constants"
+import { useForm } from "react-hook-form"
 
 export default (props) => {
+    const {
+        register,
+        handleSubmit,
+        formState: { errors }
+    } = useForm()
     const [username, setUsername] = useState("")
     const [password, setPassword] = useState("")
     const [Alert, setAlert] = useState("")
-    const [usernameError, setUsernameError] = useState(false)
-    const [passwordError, setPasswordError] = useState(false)
     const dispatch = useDispatch()
-    const account = useSelector((state) => state.account.account)
     const isLoading = useSelector((state) => state.account.isLoading)
-    const isError = useSelector((state) => state.account.isError)
     const isSuccess = useSelector((state) => state.account.isSuccess)
     const resEM = useSelector((state) => state.account.EM)
 
     const sendLoginRequest = async () => {
         try {
-            setAlert("")
-            if (!username) {
-                setUsernameError(true)
-                setAlert(
-                    <div className="text-danger">
-                        These fields cannot be empty
-                    </div>
-                )
-            } else {
-                setUsernameError(false)
-            }
-            if (!password) {
-                setPasswordError(true)
-                setAlert(
-                    <div className="text-danger">
-                        These fields cannot be empty
-                    </div>
-                )
-                return
-            } else {
-                setPasswordError(false)
-            }
-            if (username && password);
-            else return
-
-            setAlert("")
-
             dispatch(login({ username, password }))
         } catch (error) {
             setAlert(<div className="text-dander">{error}</div>)
@@ -81,12 +56,13 @@ export default (props) => {
                             Username
                         </label>
                         <input
+                            {...register("username", { required: true })}
                             onChange={(event) => {
                                 setUsername(event.target.value)
                             }}
                             type="text"
                             className={
-                                usernameError
+                                errors.username
                                     ? "form-control is-invalid"
                                     : "form-control"
                             }
@@ -100,9 +76,10 @@ export default (props) => {
                             Password
                         </label>
                         <input
+                            {...register("password", { required: true })}
                             type="password"
                             className={
-                                passwordError
+                                errors.password
                                     ? "form-control  is-invalid"
                                     : "form-control"
                             }
@@ -128,7 +105,10 @@ export default (props) => {
                     <Button variant="secondary" onClick={props.onHide}>
                         Close
                     </Button>
-                    <Button variant="primary" onClick={sendLoginRequest}>
+                    <Button
+                        variant="primary"
+                        onClick={handleSubmit(sendLoginRequest)}
+                    >
                         Log in
                     </Button>
                 </Modal.Footer>

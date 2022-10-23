@@ -3,20 +3,20 @@ import axios from "../setup/axios"
 const loginReq = (userData) => {
     return axios.post("/login", {
         username: userData.username,
-        password: userData.password,
+        password: userData.password
     })
 }
 
 const sendSignUpReq = (data) => {
     return axios.post("/register", {
         username: data.username,
-        password: data.password,
+        password: data.password
     })
 }
 
 const changePasswordReq = (data) => {
     return axios.put("/account/update-pass", {
-        ...data,
+        ...data
     })
 }
 
@@ -53,5 +53,5 @@ export default {
     sendJwtReq,
     updateLinkReq,
     deleteLinkReq,
-    createLinkReq,
+    createLinkReq
 }

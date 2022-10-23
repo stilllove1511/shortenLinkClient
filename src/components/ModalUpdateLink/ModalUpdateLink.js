@@ -1,39 +1,26 @@
 import { Button, Modal } from "react-bootstrap"
 import { useEffect, useState } from "react"
 import services from "../../services"
+import { useForm, Controller } from "react-hook-form"
 
 export default (props) => {
+    const {
+        register,
+        handleSubmit,
+        formState: { errors }
+    } = useForm({
+        defaultValues: {
+            firstName: "",
+            select: {}
+        }
+    })
     const [title, setTitle] = useState("")
     const [originLink, setOriginLink] = useState("")
     const [shortenLink, setShortenLink] = useState("")
     const [Alert, setAlert] = useState("")
 
-    const [titleError, setTitleError] = useState(false)
-    const [originLinkError, setOriginLinkError] = useState(false)
-    const [shortenLinkError, setShortenLinkError] = useState(false)
-
     const sendRequest = async () => {
         setAlert(<div className="text-primary">Loading ...</div>)
-        if (!title) {
-            setTitleError(true)
-        } else {
-            setTitleError(false)
-        }
-        if (!originLink) {
-            setOriginLinkError(true)
-        } else {
-            setOriginLinkError(false)
-        }
-        if (!shortenLink) {
-            setShortenLinkError(true)
-            return
-        } else {
-            setShortenLinkError(false)
-        }
-        if (title && originLink && shortenLink);
-        else {
-            return
-        }
         let response = await services.updateLinkReq({
             id: props.linkData.id,
             title,
@@ -41,14 +28,7 @@ export default (props) => {
             shortenLink
         })
         if (response.EC === 0) {
-            // props.onHide(true)
-            // setTitle("")
-            // setOriginLink("")
-            // setShortenLink("")
             props.onHide()
-            setTitleError(false)
-            setOriginLinkError(false)
-            setShortenLinkError(false)
             setAlert(<div className="text-success">{response.EM}</div>)
             props.refresh()
         } else {
@@ -80,16 +60,17 @@ export default (props) => {
                             Title
                         </label>
                         <input
+                            {...register("title", { required: true })}
                             onChange={(event) => {
                                 setTitle(event.target.value)
                             }}
                             type="text"
                             className={
-                                titleError
+                                errors.title
                                     ? "form-control is-invalid"
                                     : "form-control"
                             }
-                            id="username"
+                            id="title"
                             value={title}
                         />
                     </div>
@@ -99,9 +80,10 @@ export default (props) => {
                             Original link
                         </label>
                         <input
+                            {...register("originLink", { required: true })}
                             type="text"
                             className={
-                                originLinkError
+                                errors.originLink
                                     ? "form-control is-invalid"
                                     : "form-control"
                             }
@@ -118,9 +100,10 @@ export default (props) => {
                             Shorten link
                         </label>
                         <input
+                            {...register("shortenLink", { required: true })}
                             type="text"
                             className={
-                                shortenLinkError
+                                errors.shortenLink
                                     ? "form-control is-invalid"
                                     : "form-control"
                             }
@@ -138,7 +121,10 @@ export default (props) => {
                     <Button variant="secondary" onClick={props.onHide}>
                         Close
                     </Button>
-                    <Button variant="primary" onClick={() => sendRequest()}>
+                    <Button
+                        variant="primary"
+                        onClick={handleSubmit(sendRequest)}
+                    >
                         Confirm
                     </Button>
                 </Modal.Footer>

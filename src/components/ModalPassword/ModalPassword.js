@@ -1,57 +1,30 @@
 import { Modal, Button } from "react-bootstrap"
 import { useState, useEffect } from "react"
 import services from "../../services"
+import { useForm } from "react-hook-form"
 
 export default (props) => {
+    const {
+        register,
+        handleSubmit,
+        watch,
+        formState: { errors }
+    } = useForm()
     const [password, setPassword] = useState("")
     const [confirmPassword, setConfirmPassword] = useState("")
     const [Alert, setAlert] = useState("")
 
-    const [passwordError, setPasswordError] = useState(false)
-    const [confirmPasswordError, setConfirmPasswordError] = useState(false)
-
     const sendRequest = async () => {
         setAlert(<div className="text-primary">Loading ...</div>)
         try {
-            if (!password) {
-                setPasswordError(true)
-                setConfirmPasswordError(false)
-                setAlert(<div className="text-danger">Enter password</div>)
-                return
-            } else {
-                setPasswordError(false)
-            }
-            if (!confirmPassword) {
-                setPasswordError(false)
-
-                setConfirmPasswordError(true)
-                setAlert(<div className="text-danger">Confirm password</div>)
-                return
-            } else {
-                setConfirmPasswordError(false)
-            }
-            if (password !== confirmPassword) {
-                setConfirmPasswordError(true)
-                setAlert(
-                    <div className="text-danger">
-                        your password is not confrim
-                    </div>
-                )
-                return
-            }
             let res = await services.changePasswordReq({ password })
             if (res.EC === 0) {
                 setAlert(<div className="text-success">{res.EM}</div>)
-                setPasswordError(false)
-                setConfirmPasswordError(false)
                 setPassword("")
                 setConfirmPassword("")
             } else {
-                setPasswordError(false)
-                setConfirmPasswordError(false)
                 setAlert(<div className="text-danger">{res.EM}</div>)
             }
-            setAlert(<div className="text-danger">{res.EM}</div>)
         } catch (error) {
             setAlert(
                 <div className="text-danger">Server have not responsed</div>
@@ -70,9 +43,10 @@ export default (props) => {
                     <div className="mb-3">
                         <label className="form-label">Password</label>
                         <input
+                            {...register("password", { required: true })}
                             type="password"
                             className={
-                                passwordError
+                                errors.password
                                     ? "form-control  is-invalid"
                                     : "form-control"
                             }
@@ -85,9 +59,16 @@ export default (props) => {
                     <div className="mb-3">
                         <label className="form-label">Comfirm password</label>
                         <input
+                            {...register("confirmPassword", {
+                                required: true,
+                                validate: (confirmPassword) =>
+                                    confirmPassword === password
+                                        ? true
+                                        : "not same"
+                            })}
                             type="password"
                             className={
-                                confirmPasswordError
+                                errors.confirmPassword
                                     ? "form-control  is-invalid"
                                     : "form-control"
                             }
@@ -96,12 +77,20 @@ export default (props) => {
                             }
                             value={confirmPassword}
                         />
+                        {
+                            <div className="text-danger">
+                                {errors.confirmPassword?.message}
+                            </div>
+                        }
                     </div>
                     {Alert}
                 </Modal.Body>
 
                 <Modal.Footer>
-                    <Button variant="primary" onClick={sendRequest}>
+                    <Button
+                        variant="primary"
+                        onClick={handleSubmit(sendRequest)}
+                    >
                         Send
                     </Button>
                 </Modal.Footer>
