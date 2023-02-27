@@ -15,8 +15,8 @@ export default (props) => {
         }
     })
     const [title, setTitle] = useState("")
-    const [originLink, setOriginLink] = useState("")
-    const [shortenLink, setShortenLink] = useState("")
+    const [originalLink, setOriginLink] = useState("")
+    const [alias, setShortenLink] = useState("")
     const [Alert, setAlert] = useState("")
 
     const sendRequest = async () => {
@@ -24,8 +24,8 @@ export default (props) => {
         let response = await services.updateLinkReq({
             id: props.linkData.id,
             title,
-            originLink,
-            shortenLink
+            originalLink,
+            alias
         })
         if (response.EC === 0) {
             props.onHide()
@@ -38,8 +38,8 @@ export default (props) => {
 
     useEffect(() => {
         setTitle(props.linkData.title)
-        setOriginLink(props.linkData.originLink)
-        setShortenLink(props.linkData.shortenLink)
+        setOriginLink(props.linkData.originalLink)
+        setShortenLink(props.linkData.alias)
     }, [props.linkData])
 
     return (
@@ -76,42 +76,42 @@ export default (props) => {
                     </div>
 
                     <div className="mb-3">
-                        <label htmlFor="originLink" className="form-label">
+                        <label htmlFor="originalLink" className="form-label">
                             Original link
                         </label>
                         <input
-                            {...register("originLink", { required: true })}
+                            {...register("originalLink", { required: true })}
                             type="text"
                             className={
-                                errors.originLink
+                                errors.originalLink
                                     ? "form-control is-invalid"
                                     : "form-control"
                             }
-                            id="originLink"
+                            id="originalLink"
                             onChange={(event) =>
                                 setOriginLink(event.target.value)
                             }
-                            value={originLink || props.linkData.originLink}
+                            value={originalLink || props.linkData.originalLink}
                         />
                     </div>
 
                     <div className="mb-3">
-                        <label htmlFor="shortenLink" className="form-label">
+                        <label htmlFor="alias" className="form-label">
                             Shorten link
                         </label>
                         <input
-                            {...register("shortenLink", { required: true })}
+                            {...register("alias", { required: true })}
                             type="text"
                             className={
-                                errors.shortenLink
+                                errors.alias
                                     ? "form-control is-invalid"
                                     : "form-control"
                             }
-                            id="shortenLink"
+                            id="alias"
                             onChange={(event) =>
                                 setShortenLink(event.target.value)
                             }
-                            value={shortenLink || props.linkData.shortenLink}
+                            value={alias || props.linkData.alias}
                         />
                     </div>
                     {Alert}

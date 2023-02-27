@@ -1,3 +1,3 @@
-export const baseURL = "http://localhost:8080/"
+export const baseURL = process.env.REACT_APP_BASE_URL
 
-export const redirectorURL = "http://localhost:8081/"
+export const redirectorURL = process.env.REACT_APP_REDIRECT_URL

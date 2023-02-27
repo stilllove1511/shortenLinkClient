@@ -10,8 +10,8 @@ export default (props) => {
         formState: { errors }
     } = useForm()
     const [title, setTitle] = useState("")
-    const [originLink, setOriginLink] = useState("")
-    const [shortenLink, setShortenLink] = useState("")
+    const [originalLink, setOriginLink] = useState("")
+    const [alias, setShortenLink] = useState("")
     const [Alert, setAlert] = useState("")
 
     const sendRequest = async () => {
@@ -19,8 +19,8 @@ export default (props) => {
         try {
             let response = await services.createLinkReq({
                 title,
-                originLink,
-                shortenLink
+                originalLink,
+                alias
             })
             if (response.EC === 0) {
                 props.onHide()
@@ -68,42 +68,42 @@ export default (props) => {
                     </div>
 
                     <div className="mb-3">
-                        <label htmlFor="originLink" className="form-label">
+                        <label htmlFor="originalLink" className="form-label">
                             Original link
                         </label>
                         <input
-                            {...register("originLink", { required: true })}
+                            {...register("originalLink", { required: true })}
                             type="text"
                             className={
-                                errors.originLink
+                                errors.originalLink
                                     ? "form-control is-invalid"
                                     : "form-control"
                             }
-                            id="originLink"
+                            id="originalLink"
                             onChange={(event) =>
                                 setOriginLink(event.target.value)
                             }
-                            value={originLink}
+                            value={originalLink}
                         />
                     </div>
 
                     <div className="mb-3">
-                        <label htmlFor="shortenLink" className="form-label">
+                        <label htmlFor="alias" className="form-label">
                             Shorten link
                         </label>
                         <input
-                            {...register("shortenLink", { required: true })}
+                            {...register("alias", { required: true })}
                             type="text"
                             className={
-                                errors.shortenLink
+                                errors.alias
                                     ? "form-control is-invalid"
                                     : "form-control"
                             }
-                            id="shortenLink"
+                            id="alias"
                             onChange={(event) =>
                                 setShortenLink(event.target.value)
                             }
-                            value={shortenLink}
+                            value={alias}
                         />
                     </div>
 

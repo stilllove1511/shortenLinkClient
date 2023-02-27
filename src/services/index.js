@@ -1,47 +1,47 @@
 import axios from "../setup/axios"
 
 const loginReq = (userData) => {
-    return axios.post("/login", {
+    return axios.post("/login/", {
         username: userData.username,
         password: userData.password
     })
 }
 
 const sendSignUpReq = (data) => {
-    return axios.post("/register", {
+    return axios.post("/register/", {
         username: data.username,
         password: data.password
     })
 }
 
 const changePasswordReq = (data) => {
-    return axios.put("/account/update-pass", {
+    return axios.put("/account/update-pass/", {
         ...data
     })
 }
 
 const createLinkReq = (data) => {
-    return axios.post("/link/create", { ...data })
+    return axios.post("/link/custom-create/", { ...data })
 }
 
 const getLinkReq = () => {
-    return axios.get("/link/read")
+    return axios.get("/link/")
 }
 
 const getAllLinkReq = () => {
-    return axios.get("/link/readAll")
+    return axios.get("/link/readAll/")
 }
 
 const updateLinkReq = (data) => {
-    return axios.put("/link/update", { ...data })
+    return axios.put("/link/update/"+data.id, { ...data })
 }
 
 const deleteLinkReq = (id) => {
-    return axios.delete("/link/delete", { data: { id: id } })
+    return axios.delete("/link/delete/"+id)
 }
 
 const sendJwtReq = () => {
-    return axios.get("/account/user-infor")
+    return axios.get("/account/user-infor/")
 }
 
 export default {

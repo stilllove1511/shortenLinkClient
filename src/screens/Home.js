@@ -27,8 +27,8 @@ export default (props) => {
     const [linkData, setLinkData] = useState({
         id: 0,
         title: "",
-        originLink: "",
-        shortenLink: ""
+        originalLink: "",
+        alias: ""
     })
 
     const handleDeleteLink = async (link) => {
@@ -114,18 +114,18 @@ export default (props) => {
                             className="card hover max-width-90"
                             onClick={() => {
                                 navigator.clipboard.writeText(
-                                    redirectorURL + link.shortenLink
+                                    redirectorURL + link.alias
                                 )
                             }}
                         >
                             <div className="card-body">
                                 <span className="card-title">
-                                    <b>{link.title} </b>({link.originLink})
+                                    <b>{link.title} </b>({link.originalLink})
                                 </span>
                                 <br />
 
                                 <span className="card-text">
-                                    {redirectorURL + link.shortenLink}
+                                    {redirectorURL + link.alias}
                                 </span>
                                 <div className="hover__hover">
                                     <EditIcon

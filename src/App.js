@@ -13,6 +13,7 @@ function App() {
     const dispatch = useDispatch()
     useEffect(() => {
         // window.history.pushState("", "", "/")
+        // console.log(process.env.REACT_APP_BASE_URL);
         dispatch(sendJwt())
     }, [])
     return (

@@ -39,7 +39,7 @@ export default (props) => {
                             className="card-body"
                             onClick={() => {
                                 navigator.clipboard.writeText(
-                                    redirectorURL + link.shortenLink
+                                    redirectorURL + link.alias
                                 )
                             }}
                         >
@@ -47,14 +47,14 @@ export default (props) => {
                                 <b>Original link: </b>
                                 <u
                                     onClick={() => {
-                                        window.open(link.originLink)
+                                        window.open(link.originalLink)
                                     }}
                                 >
-                                    {link.originLink}
+                                    {link.originalLink}
                                 </u>
                                 <br />
                                 <b>Shorten link: </b>
-                                {redirectorURL + link.shortenLink}
+                                {redirectorURL + link.alias}
                             </span>
                         </div>
                     </div>
