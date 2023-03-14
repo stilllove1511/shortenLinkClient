@@ -16,16 +16,17 @@ export default (props) => {
     })
     const [title, setTitle] = useState("")
     const [originalLink, setOriginLink] = useState("")
-    const [alias, setShortenLink] = useState("")
+    const [newAlias, setShortenLink] = useState("")
     const [Alert, setAlert] = useState("")
 
     const sendRequest = async () => {
         setAlert(<div className="text-primary">Loading ...</div>)
+        console.log(newAlias)
         let response = await services.updateLinkReq({
-            id: props.linkData.id,
+            oldAlias: props.linkData.alias,
             title,
             originalLink,
-            alias
+            alias: newAlias
         })
         if (response.EC === 0) {
             props.onHide()
@@ -108,10 +109,11 @@ export default (props) => {
                                     : "form-control"
                             }
                             id="alias"
-                            onChange={(event) =>
+                            onChange={(event) =>{
                                 setShortenLink(event.target.value)
-                            }
-                            value={alias || props.linkData.alias}
+                                console.log(newAlias)
+                            }}
+                            value={newAlias || props.linkData.alias}
                         />
                     </div>
                     {Alert}

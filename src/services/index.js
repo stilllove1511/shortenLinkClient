@@ -33,11 +33,12 @@ const getAllLinkReq = () => {
 }
 
 const updateLinkReq = (data) => {
-    return axios.put("/link/update/"+data.id, { ...data })
+    console.log(data.alias)
+    return axios.put("/link/update/"+data.oldAlias, { ...data })
 }
 
-const deleteLinkReq = (id) => {
-    return axios.delete("/link/delete/"+id)
+const deleteLinkReq = (alias) => {
+    return axios.delete("/link/delete/"+alias)
 }
 
 const sendJwtReq = () => {

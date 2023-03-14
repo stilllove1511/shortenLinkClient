@@ -7,7 +7,7 @@ export default (props) => {
     const sendRequest = async () => {
         setAlert(<div className="text-primary">Loading ...</div>)
         try {
-            let response = await services.deleteLinkReq(props.link.id)
+            let response = await services.deleteLinkReq(props.link.alias)
             if (response) {
                 if (response.EC === 0) {
                     setAlert("")

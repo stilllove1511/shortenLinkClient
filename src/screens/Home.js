@@ -23,7 +23,6 @@ export default (props) => {
     const [isShowSignUpModal, setIsShowSignUpModal] = useState(false)
     const [isShowCreateLinkModal, setIsShowCreateLinkModal] = useState(false)
     const [isShowDeleteLinkModal, setIsShowDeleteLinkModal] = useState(false)
-    const [linkId, setLinkId] = useState(0)
     const [linkData, setLinkData] = useState({
         id: 0,
         title: "",
@@ -131,8 +130,6 @@ export default (props) => {
                                     <EditIcon
                                         className="text-warning"
                                         onClick={() => {
-                                            setLinkId(link.id)
-
                                             setLinkData(link)
 
                                             setIsShowUpdateLinkModal(true)
@@ -172,7 +169,6 @@ export default (props) => {
                     setIsShowUpdateLinkModal(false)
                 }}
                 refresh={fetchLink}
-                linkId={linkId}
                 linkData={linkData}
             />
         </>
