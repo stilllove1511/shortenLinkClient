@@ -1,15 +1,13 @@
 version: 0.2
-
 phases:
     pre_build:
         commands:
-            - echo Installing packages...
             - yum install -y nodejs
             - npm install
     build:
         commands:
-          - echo Building app...
-          - npm run build
+            - npm run build
     post_build:
         commands:
-          - echo Uploading app to S3...
+            # copy the contents of /build to S3
+            - aws s3 cp --recursive ./build s3://shortenlink-output-codebuild/
