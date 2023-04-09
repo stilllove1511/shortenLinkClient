@@ -71,7 +71,7 @@ export default (props) => {
                                     : "form-control"
                             }
                             id="title"
-                            value={title || props.linkData.title}
+                            value={title}
                         />
                     </div>
 
@@ -91,27 +91,7 @@ export default (props) => {
                             onChange={(event) =>
                                 setOriginLink(event.target.value)
                             }
-                            value={originalLink || props.linkData.originalLink}
-                        />
-                    </div>
-
-                    <div className="mb-3">
-                        <label htmlFor="alias" className="form-label">
-                            Shorten link
-                        </label>
-                        <input
-                            {...register("alias", { required: true })}
-                            type="text"
-                            className={
-                                errors.alias
-                                    ? "form-control is-invalid"
-                                    : "form-control"
-                            }
-                            id="alias"
-                            onChange={(event) =>
-                                setShortenLink(event.target.value)
-                            }
-                            value={alias || props.linkData.alias}
+                            value={originalLink}
                         />
                     </div>
                     {Alert}

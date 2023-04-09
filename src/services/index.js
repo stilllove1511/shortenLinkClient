@@ -33,7 +33,7 @@ const getAllLinkReq = () => {
 }
 
 const updateLinkReq = (data) => {
-    return axios.put("/link/update/"+data.id, { ...data })
+    return axios.put("/link/update/"+data.alias, { ...data })
 }
 
 const deleteLinkReq = (id) => {
